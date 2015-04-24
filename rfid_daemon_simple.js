@@ -4,7 +4,6 @@ var SerialPortLib = require("serialport");
 var BigNumber = require('big-number').n;
 var moment = require('moment');
 var ConvertBase = require('convert-base');
-var converter = new ConvertBase();
 var async = require('async');
 
 
@@ -13,6 +12,7 @@ var prevRfid = -1
 var datetimeFormat = "MM/DD/YYYY HH:mm:ss"
 var portName = 'COM1';
 var serialPort;
+var converter = new ConvertBase();
 
 
 function openPort(portName) {
