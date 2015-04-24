@@ -4,6 +4,7 @@ var SerialPortLib = require("serialport");
 var BigNumber = require('big-number').n;
 var moment = require('moment');
 var ConvertBase = require('convert-base');
+var converter = new ConvertBase();
 var async = require('async');
 
 
@@ -44,10 +45,14 @@ function onData(info) {
     if ( isNoTagRead(currRfid) ) {
       console.log( moment().format(datetimeFormat) + ' No tag read')
     } else {
-      console.log( moment().format(datetimeFormat) + ' RFID tag read: ' + currRfid + ' ' + ConvertBase.decToHex(currRfid + '').substring(2, 18).toUpperCase());
+      console.log( moment().format(datetimeFormat) + ' RFID tag read: ' + currRfid + ' ' + toHex(currRfid).substring(2, 18).toUpperCase());
     }
     prevRfid = currRfid
   }
+}
+
+function toHex(number) {
+  return converter.convert(number, 10, 16)
 }
 
 function rfidTransponderChange( currRfid, prevRfid) {
