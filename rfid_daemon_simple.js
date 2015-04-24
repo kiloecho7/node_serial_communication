@@ -45,14 +45,14 @@ function onData(info) {
     if ( isNoTagRead(currRfid) ) {
       console.log( moment().format(datetimeFormat) + ' No tag read')
     } else {
-      console.log( moment().format(datetimeFormat) + ' RFID tag read: ' + currRfid + ' ' + toHex(currRfid).substring(2, 18).toUpperCase());
+      console.log( moment().format(datetimeFormat) + ' RFID tag read: ' + currRfid + ' ' + toHex(currRfid));
     }
     prevRfid = currRfid
   }
 }
 
 function toHex(number) {
-  return converter.convert(number, 10, 16)
+  return converter.convert(number, 10, 16).toUpperCase()
 }
 
 function rfidTransponderChange( currRfid, prevRfid) {
