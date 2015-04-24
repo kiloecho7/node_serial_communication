@@ -10,33 +10,27 @@ var async = require('async');
 //----------- Global Variables --------------
 var prevRfid = -1
 var datetimeFormat = "MM/DD/YYYY HH:mm:ss"
-var serialPort = 'Bob';
+var portName = 'COM1';
+var serialPort;
 
 
 function openPort(portName) {
   serialPort = new SerialPortLib.SerialPort(portName, { baudrate: 57600 }, true);
   if ( isDefined(serialPort) ) {
     serialPort.on('data', onData);
-    console.log('opened serial port ' + portName)
-    console.log('   serialPort: ' + serialPort)
   } else {
-    console.log('failed to open serial port or getting ahead of async')
+    console.log('Failure opening serial port ' + portName)
   }
 }
 
 
 function sendRead() {
   if (isDefined(serialPort)) {
-    console.log('sending read')
     serialPort.write(createAllInOneReadCommand())
-  } else {
-    console.log('\'serialPort\' is not defined. Cannot send read')
   }
 }
 
 function onData(info) {
-  console.log('onData()')
-  console.log('   info: ' + info)
   var data = arrayBufferToTypedArray(info)
   readBuffer = data
 
@@ -68,16 +62,6 @@ function arrayBufferToTypedArray(buf) {
   return String.fromCharCode.apply(null, new Uint8Array(buf));
 }
 
-
-function messageFullyReceived(data) {
-  msgLength = getMessageLength(data)
-  if (msgLength == undefined)
-    return false
-  if (data.length == msgLength)
-    return true
-  else
-    return false
-}
 
 function noTagRead(data) {
   return (data.charCodeAt(7) == 0 && data.charCodeAt(8) == 0)
@@ -159,16 +143,12 @@ function isDefined(obj) {
   return (typeof obj != 'undefined');
 }
 
-function listPortsCallback(err, ports) {
-  if ( isDefined(ports) ) {
-    ports.forEach( function(port) {
-      listOfPorts.push( {'name': port.comName, 'pnpId': port.pnpId, 'mfg': port.manufacturer} );
-    });
-  }
-}
 
-var portName = 'COM1';
-console.log('serialPort: ' + serialPort)
+
+
+
+
+
 openPort(portName)
 setInterval( sendRead, 250, serialPort);  
 
